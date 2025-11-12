@@ -1,0 +1,113 @@
+cd path/to/my-terraform-project
+
+terraform init
+terraform fmt
+terraform validate
+terraform plan -out=plan.out -var-file=dev.tfvars
+terraform apply plan.out
+
+# Inspect outputs
+terraform output
+
+# …later, when done testing…
+terraform destroy -var-file=dev.tfvars
+
+
+
+Ways to define variables in Terraform
+
+
+
+Within Configuration Files using the variable block.
+defining variable in main.tf or variable.tf 
+variable "region" {
+  description = "AWS region to deploy into"
+  type        = string
+  default     = "us-east-1"
+}
+When to use: Good for sensible defaults and documenting intent.
+Pros: Self-contained, version-controlled, supports validation.
+Cons: Harder to override for different environments without extra files or flags.
+
+
+
+Via a CLI prompt during Terraform initialization or execution.
+leaving variable empty and when executing in cli terraform plan it will ask for it 
+in terraform plan 
+$ terraform apply
+var.region
+  AWS region to deploy into
+
+  Enter a value:
+When to use: Quick one-off runs when you don’t mind interactive input.
+Pros: No extra files or flags needed.
+Cons: Not scriptable—breaks automated pipelines.
+
+
+
+Via Command-Line Flags using the -var option.
+terraform apply \
+  -var="region=us-west-2" \
+  -var="environment=production"
+or 
+
+terraform plan or apply -var="bucketname=mycloudbucketfortesting2025"
+
+When to use: Ad-hoc overrides in scripts or CI jobs.
+Pros: Explicit and easy in one-off commands.
+Cons: Values may end up in your shell history; can get messy if you have many vars.
+
+
+Via Environment Variables prefixed with TF_VAR_.
+export TF_VAR_region="eu-central-1"
+export TF_VAR_environment="staging"
+terraform apply
+
+When to use: CI/CD pipelines or when you want to avoid exposing secrets in files.
+Pros: Cleaner than long -var flags; can keep secrets out of code.
+Cons: Risk of leaking sensitive values in process lists or logs if you’re not careful
+
+
+Via a .tfvars file or .tfvars.json file.
+# prod.tfvars
+region      = "us-east-2"
+environment = "production"
+
+then run 
+terraform apply -var-file="prod.tfvars"
+
+When to use: Managing multiple environments (dev, test, prod) with separate files.
+Pros: Clean separation of config; version-control–friendly (exclude secrets via .gitignore).
+Cons: You must remember to pass the right file each time, or name it terraform.tfvars to auto-load.
+
+Via the Terraform Cloud or Terraform Enterprise UI.
+
+When you run Terraform in a remote workspace, you can set variables (and their sensitivity) through the web UI or API:
+Workspace Variables: Key/value pairs you configure in Settings → Variables.
+Environment vs. Terraform Variables: Separate secrets from plain-text values.
+When to use: Centralized management in team environments; avoid handling credentials in repos.
+Pros: Audit trails, role-based access, encrypted storage of sensitive values.
+Cons: Requires Terraform Cloud/Enterprise; adds an external dependency.
+
+Outputs 
+
+
+
+
+which port ansible reach out
+tower cli structure where and how files are stores and how it runs 
+ansible module start and how we write playbook
+python data type 
+how salesforce deployment was happening in ansible playbook 
+difference between iam policy and resource policy
+difference between s3 policy and iam 
+how policy are written in json 
+how to use ECR 
+dockar commands cheat sheet how they are used 
+terraform statefile what is it and how its used 
+terrraform whay we use it and are there any other tools like this and why terraform  is more popular 
+ansible tower why we use it 
+what are basic 
+
+vpc how do we do subnetting and how many ips we need 
+how to assign ip and networking 
